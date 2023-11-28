@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import './App.css'
 import axios from 'axios'
+import { TopArtistsDisplay } from './components'
+import './App.css'
 
 function App() {
   const CLIENT_ID = '7853a85331ec49398963a63212cdfe93'
@@ -8,9 +9,7 @@ function App() {
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
   const RESPONSE_TYPE = 'token'
   const SCOPE = 'user-top-read'
-
   const [token, setToken] = useState('')
-  const [topArtists, setTopArtists] = useState([])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -30,17 +29,7 @@ function App() {
     setToken('')
   }
 
-  useEffect(() => {
-    const getData = async () => {
-      const { data } = await axios.get('https://api.spotify.com/v1/me/top/artists', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setTopArtists(data.items)
-    }
-    getData()
-  }, [token])
+
 
   return (
     <>
@@ -49,9 +38,7 @@ function App() {
         : <button onClick={handleLogout}>Logout</button>}
 
       {token ?
-        <div>
-          {topArtists.map(el => <div><h2>{el.name}</h2><img src={el.images[0].url}></img></div>)}
-        </div>
+        <TopArtistsDisplay />
         : <h2>Please Login</h2>
       }
 
