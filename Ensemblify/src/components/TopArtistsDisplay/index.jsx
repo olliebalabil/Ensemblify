@@ -72,7 +72,9 @@ export default function TopArtistsDisplay() {
   return (
     <div>
       <button onClick={handleMix}>Mix</button>
+      <div className='top-artists'>
       {topArtists.map(el => <ArtistButton key={el.id} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
+      </div>
 
     </div>
   )

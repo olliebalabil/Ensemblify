@@ -1,0 +1,19 @@
+.top-artists {
+  display: flex;
+  flex-wrap: wrap;
+
+}
+.artist-button > img {
+  border-radius: 50%;
+  transition: 250ms;
+  width: 250px;
+  height: 250px
+}
+.artist-button > img:hover {
+  transform: scale(1.05);
+}
+.artist-button {
+  text-align: center;
+}
+
+

@@ -11,6 +11,6 @@ export default function ArtistButton({data, selectedArtists, setSelectedArtists}
   }
 
   return (
-    <div key={data.id} onClick={handleClick}><h2>{data.name}</h2><img src={data.images[0].url}></img></div>
+    <div className="artist-button" key={data.id} onClick={handleClick}><h2>{data.name}</h2><img src={data.images[0].url}></img></div>
   )
 }
