@@ -3,10 +3,10 @@ import React, {useState} from 'react'
 export default function ArtistButton({data, selectedArtists, setSelectedArtists}) {
 
   const handleClick = () =>{
-    if (selectedArtists.includes(data)) {
-      setSelectedArtists(prevState => prevState.filter(el => el!=data))
+    if (selectedArtists.includes(data.id)) {
+      setSelectedArtists(prevState => prevState.filter(el => el!=data.id))
     } else {
-      setSelectedArtists(prevState => [...prevState, data])
+      setSelectedArtists(prevState => [...prevState, data.id])
     }
   }
 
