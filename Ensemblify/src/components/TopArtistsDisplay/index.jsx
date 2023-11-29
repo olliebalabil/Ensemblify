@@ -7,6 +7,8 @@ export default function TopArtistsDisplay({ spotifyApi }) {
   const [selectedArtists, setSelectedArtists] = useState([])
   const [recommendedTracks, setRecommendedTracks] = useState([])
   const [showPlaylist, setShowPlaylist] = useState(false)
+  const [artists,setArtists] = useState([]) //this changes from top artists to similar artists
+
 
   const mockTrackData = [
     "spotify:track:52Bg6oaos7twR7IUtEpqcE",
@@ -40,7 +42,7 @@ export default function TopArtistsDisplay({ spotifyApi }) {
         }
       })
         .then((response) => {
-          setTopArtists(response.data.items)
+          setArtists(response.data.items)
         })
         .catch((err) => {
           console.error(err.response.status)
@@ -65,6 +67,7 @@ export default function TopArtistsDisplay({ spotifyApi }) {
         }
       })
         .then((response) => {
+          
           for (let j = 0; j < response.data.artists.length; j++) {
             if (j < 5) { //returns 5 related artists
               getTracks(response.data.artists[j].id)
@@ -103,7 +106,6 @@ export default function TopArtistsDisplay({ spotifyApi }) {
           spotifyApi.addTracksToPlaylist(data.body.id, tracks)
             .then(function (data) {
               console.log("Tracks added", data)
-              setShowPlaylist(!showPlaylist)
             }, function (err) {
               console.log("error", err)
             })
@@ -117,15 +119,13 @@ export default function TopArtistsDisplay({ spotifyApi }) {
 
   return (
     <div>
-      {!showPlaylist ? //change this later
         <div>
           <button onClick={handleMix}>Mix</button>
           <div className='top-artists'>
-            {topArtists.map(el => <ArtistButton key={el.id} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
+            {artists.map(el => <ArtistButton key={el.id} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
           </div>
         </div>
-        : <Playlist trackData={mockTrackData} />
-      }
+      
     </div>
   )
 }
