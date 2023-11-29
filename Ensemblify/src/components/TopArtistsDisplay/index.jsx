@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ArtistButton } from "../../components"
 
-export default function TopArtistsDisplay({spotifyApi}) {
+export default function TopArtistsDisplay({ spotifyApi }) {
   const [topArtists, setTopArtists] = useState([])
   const [selectedArtists, setSelectedArtists] = useState([])
   const [recommendedTracks, setRecommendedTracks] = useState([])
 
+
+  useEffect(() => {
+    console.log(selectedArtists)
+  }, [selectedArtists])
 
   useEffect(() => {
     const getData = async () => {
@@ -35,16 +39,23 @@ export default function TopArtistsDisplay({spotifyApi}) {
     //get related artists for each selected artist
     let tracks = []
     const getTopTracks = async (id) => {
-      const { data } = await axios.get(`https://api.spotify.com/v1/artists/${id}/related-artists`, {
+      axios.get(`https://api.spotify.com/v1/artists/${id}/related-artists`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       })
-      for (let j = 0; j < data.artists.length; j++) {
-        if (j < 5) { //returns 5 related artists
-          getTracks(data.artists[j].id)
-        }
-      }
+        .then((response) => {
+          for (let j = 0; j < response.data.artists.length; j++) {
+            if (j < 5) { //returns 5 related artists
+              getTracks(response.data.artists[j].id)
+            }
+          }
+          setRecommendedTracks(tracks)
+        })
+
+        .catch((err) => {
+          console.error("error", err.message)
+        })
     }
 
     //get top tracks for each related artist
@@ -56,7 +67,6 @@ export default function TopArtistsDisplay({spotifyApi}) {
       })
       for (let j = 0; j < data.tracks.length; j++) {
         tracks.push(data.tracks[j].uri)
-        setRecommendedTracks(tracks)
       }
     }
 
@@ -66,24 +76,25 @@ export default function TopArtistsDisplay({spotifyApi}) {
       }
     }
 
-    const addToPlaylist = async () => {
-      spotifyApi.createPlaylist("Ensemblify Playlist", {'description': 'Featuring recommendations based on your favourite artists', 'public': false})
-      .then(function(data) {
-        spotifyApi.addTracksToPlaylist(data.body.id, recommendedTracks)
-        .then(function(data) {
-          console.log("Tracks added", data)
-        }, function(err){ 
-          console.log("error",err)
+    const addPlaylist = async () => {
+      await addToRelatedArtists()
+
+      spotifyApi.createPlaylist("Ensemblify Playlist", { 'description': 'Featuring recommendations based on your favourite artists', 'public': false })
+        .then(function (data) {
+          spotifyApi.addTracksToPlaylist(data.body.id, tracks)
+            .then(function (data) {
+              console.log("Tracks added", data)
+            }, function (err) {
+              console.log("error", err)
+            })
+        }, function (err) {
+          console.log('Error', err)
+
         })
-      }, function (err) {
-        console.log('Error', err)
-      })
     }
-
-
-    addToRelatedArtists()
-    addToPlaylist()
+    addPlaylist()
   }
+
   return (
     <div>
       <button onClick={handleMix}>Mix</button>
