@@ -1,12 +1,32 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { ArtistButton } from "../../components"
+import { ArtistButton, Playlist } from "../../components"
 
 export default function TopArtistsDisplay({ spotifyApi }) {
   const [topArtists, setTopArtists] = useState([])
   const [selectedArtists, setSelectedArtists] = useState([])
   const [recommendedTracks, setRecommendedTracks] = useState([])
+  const [showPlaylist, setShowPlaylist] = useState(false)
 
+  const mockTrackData = [
+    "spotify:track:52Bg6oaos7twR7IUtEpqcE",
+    "spotify:track:15Iczlf2Xl2s4EiLFrkYeg",
+    "spotify:track:0Ziohm1Ku8E2yUDYoclfhO",
+    "spotify:track:5AMrnF761nziCWUfjBgRUI",
+    "spotify:track:1bFPKxP56XWDXJOwo3Kvfp",
+    "spotify:track:4HqRhdpxH9zFUkf1kzbr3H",
+    "spotify:track:4xfAVJL8R7mVYbDk8a9xOY",
+    "spotify:track:0AYECTSiSlE8sQtGKypxx2",
+    "spotify:track:4gRySBzWoWD2JqEFZnfPuX",
+    "spotify:track:6tPiCU4LFsXUQPRIykOAnl",
+    "spotify:track:4kbMNRyFzBoqPxLxX1Q2Jq",
+    "spotify:track:5ckwOX7SVzt9OISbGkD299",
+    "spotify:track:6iI6NXjtI3IkjK2k1juqaX",
+    "spotify:track:1EfWxxlaLLiwnLS3ABr8vu",
+    "spotify:track:3Xy16SYnhBiSBL5yUXaHG1",
+    "spotify:track:0tvepqOHxqKt2PYRcLTHRR",
+    "spotify:track:1L8n3DR0g5w36X51i2k8A4"
+  ]
 
   useEffect(() => {
     console.log(selectedArtists)
@@ -50,7 +70,6 @@ export default function TopArtistsDisplay({ spotifyApi }) {
               getTracks(response.data.artists[j].id)
             }
           }
-          setRecommendedTracks(tracks)
         })
 
         .catch((err) => {
@@ -78,12 +97,13 @@ export default function TopArtistsDisplay({ spotifyApi }) {
 
     const addPlaylist = async () => {
       await addToRelatedArtists()
-
+      setRecommendedTracks(tracks)
       spotifyApi.createPlaylist("Ensemblify Playlist", { 'description': 'Featuring recommendations based on your favourite artists', 'public': false })
         .then(function (data) {
           spotifyApi.addTracksToPlaylist(data.body.id, tracks)
             .then(function (data) {
               console.log("Tracks added", data)
+              setShowPlaylist(!showPlaylist)
             }, function (err) {
               console.log("error", err)
             })
@@ -97,11 +117,15 @@ export default function TopArtistsDisplay({ spotifyApi }) {
 
   return (
     <div>
-      <button onClick={handleMix}>Mix</button>
-      <div className='top-artists'>
-        {topArtists.map(el => <ArtistButton key={el.id} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
-      </div>
-
+      {!showPlaylist ? //change this later
+        <div>
+          <button onClick={handleMix}>Mix</button>
+          <div className='top-artists'>
+            {topArtists.map(el => <ArtistButton key={el.id} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
+          </div>
+        </div>
+        : <Playlist trackData={mockTrackData} />
+      }
     </div>
   )
 }
