@@ -1,15 +1,23 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import SpotifyWebApi from 'spotify-web-api-node'
 import { TopArtistsDisplay } from './components'
 import './App.css'
+
+
 
 function App() {
   const CLIENT_ID = '7853a85331ec49398963a63212cdfe93'
   const REDIRECT_URI = 'http://localhost:5173'
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
   const RESPONSE_TYPE = 'token'
-  const SCOPE = 'user-top-read'
+  const SCOPE = 'user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email'
   const [token, setToken] = useState('')
+
+  const spotifyApi = new SpotifyWebApi({
+    clientId: '7853a85331ec49398963a63212cdfe93',
+    redirectUri: 'http://localhost:5173'
+  })
 
   useEffect(() => {
     const hash = window.location.hash
@@ -24,8 +32,25 @@ function App() {
 
   }, [])
 
+  useEffect(()=>{
+    if (token) {
+      axios.get("https://api.spotify.com/v1/me",{
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      .then((response)=>{
+        window.localStorage.setItem("user_id",response.data.id)
+      })
+      .catch((err)=>{
+        console.error(err.message)
+      })
+    }
+  },[token])
+
   const handleLogout = () => {
     window.localStorage.removeItem('token')
+    window.localStorage.removeItem('user_id')
     setToken('')
   }
 
@@ -38,7 +63,7 @@ function App() {
         : <button onClick={handleLogout}>Logout</button>}
 
       {token ?
-        <TopArtistsDisplay />
+        <TopArtistsDisplay spotifyApi={spotifyApi}/>
         : <h2>Please Login</h2>
       }
 
