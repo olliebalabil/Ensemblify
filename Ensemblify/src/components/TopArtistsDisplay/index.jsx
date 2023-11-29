@@ -5,7 +5,7 @@ import { ArtistButton, Playlist } from "../../components"
 export default function TopArtistsDisplay({ spotifyApi }) {
   const [topArtists, setTopArtists] = useState([])
   const [selectedArtists, setSelectedArtists] = useState([])
-  const [recommendedTracks, setRecommendedTracks] = useState([])
+  const [trackData, setTrackData] = useState([])
   const [showPlaylist, setShowPlaylist] = useState(false)
 
   const mockTrackData = [
@@ -85,7 +85,7 @@ export default function TopArtistsDisplay({ spotifyApi }) {
         }
       })
       for (let j = 0; j < data.tracks.length; j++) {
-        tracks.push(data.tracks[j].uri)
+        tracks.push(data.tracks[j])
       }
     }
 
@@ -97,7 +97,8 @@ export default function TopArtistsDisplay({ spotifyApi }) {
 
     const addPlaylist = async () => {
       await addToRelatedArtists()
-      setRecommendedTracks(tracks)
+      setTrackData(tracks)
+      setShowPlaylist(!showPlaylist)
       spotifyApi.createPlaylist("Ensemblify Playlist", { 'description': 'Featuring recommendations based on your favourite artists', 'public': false })
         .then(function (data) {
           spotifyApi.addTracksToPlaylist(data.body.id, tracks)
@@ -117,15 +118,13 @@ export default function TopArtistsDisplay({ spotifyApi }) {
 
   return (
     <div>
-      {!showPlaylist ? //change this later
         <div>
           <button onClick={handleMix}>Mix</button>
           <div className='top-artists'>
             {topArtists.map(el => <ArtistButton key={el.id} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
           </div>
         </div>
-        : <Playlist trackData={mockTrackData} />
-      }
+
     </div>
   )
 }

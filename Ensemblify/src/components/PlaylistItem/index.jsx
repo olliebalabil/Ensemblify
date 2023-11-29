@@ -1,7 +1,9 @@
 import React from 'react'
 
-export default function PlaylistItem() {
+export default function PlaylistItem({data}) {
   return (
-    <div>PlaylistItem</div>
+    <div>
+      {data.name}
+    </div>
   )
 }
