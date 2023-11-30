@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
+import { preprocessCSS } from 'vite'
 
 export default function TopArtistsDisplay({ spotifyApi }) {
   const [selectedArtists, setSelectedArtists] = useState([])
@@ -61,6 +62,7 @@ export default function TopArtistsDisplay({ spotifyApi }) {
         for (let i = 0; i < artists.length; i++) {
           spotifyApi.getArtistTopTracks(artists[i].id, 'GB')
             .then(function (response) {
+              setTrackData(prevState => [...prevState, ...response.body.tracks.map(el=>el)])
               spotifyApi.addTracksToPlaylist(playlistId, response.body.tracks.map(el => el.uri))
                 .then(function (response) {
                   console.log("tracks added")
