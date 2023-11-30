@@ -61,6 +61,7 @@ function App() {
 
   return (
     <>
+    <div className='header'>
       <h1 className='mashify-title'>Mashify</h1>
       {!token ? <a className="login-link" href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>Login to Spotify</a>
         : <a className="login-link" onClick={handleLogout}>Logout</a>}
@@ -69,6 +70,8 @@ function App() {
         <TopArtistsDisplay spotifyApi={spotifyApi}/>
         : <h2>Login to get started</h2>
       }
+    </div>
+
 
 
     </>

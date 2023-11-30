@@ -4,6 +4,7 @@
   background-color: rgb(37, 37, 37);
   color: aliceblue;
 }
+
 .mashify-title{
   font-size: 8vh;
 }
@@ -18,12 +19,12 @@
 .top-artists {
   display: flex;
   flex-wrap: wrap;
-
+  justify-content: center;
 }
 .artist-button > img {
   display:block;
   transition: 250ms;
-
+  
   width:100%;
   height:100%;
   object-fit: cover;
@@ -33,8 +34,9 @@
   transform: scale(1.05);
 }
 .artist-button {
-  width: 250px;
-  height: 250px;
+  width: auto;
+  max-width: 250px;
+  aspect-ratio: 1/1;
   background-size: cover;
   background-position: center;
   border-radius: 50%; /* This creates the circular shape */
@@ -53,5 +55,8 @@
 }
 .action-btn:hover {
   transform: scale(1.05);
+}
+.action-btn {
+  font-size: 4vh;
 }
 
