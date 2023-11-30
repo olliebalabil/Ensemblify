@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
-import { preprocessCSS } from 'vite'
 
 export default function TopArtistsDisplay({ spotifyApi }) {
   const [selectedArtists, setSelectedArtists] = useState([])
@@ -53,29 +52,76 @@ export default function TopArtistsDisplay({ spotifyApi }) {
     setShowCreateButton(!showCreateButton)
   }
 
+  // const handleCreate = () => {
+  //   let playlistId = '';
+  //   spotifyApi.createPlaylist("Ensemblify Playlist", { "description": "", "public": false })
+  //     .then(function (response) {
+  //       console.log("created playlist")
+  //       playlistId = response.body.id;
+  //       let promises = []
+
+  //       for (let i = 0; i < artists.length; i++) {
+  //         const trackPromise = spotifyApi.getArtistTopTracks(artists[i].id, 'GB')
+  //           .then(function (response) {
+  //             setTrackData(prevState => [...prevState, ...response.body.tracks.map(el => el.uri)])
+  //             return response.body.tracks.map(el => el.uri)
+  //           }, function (err) {
+  //             console.error({ "error": err })
+  //             return []
+  //           })
+  //         promises.push(trackPromise)
+  //       }
+  //       return Promise.all(promises)
+  //     })
+  //     .then(function (allTopTracks) {
+  //       return spotifyApi.addTracksToPlaylist(playlistId, trackData)
+  //     })
+  //     .then(function (response){
+  //       console.log("tracks added")
+  //     }) 
+  //     .catch(function(err){
+  //       console.error({"error":err})
+  //     })
+  // }
+
   const handleCreate = () => {
     let playlistId = '';
     spotifyApi.createPlaylist("Ensemblify Playlist", { "description": "", "public": false })
       .then(function (response) {
         console.log("created playlist")
         playlistId = response.body.id;
+        const promises = [];
+  
         for (let i = 0; i < artists.length; i++) {
-          spotifyApi.getArtistTopTracks(artists[i].id, 'GB')
+          const trackPromise = spotifyApi.getArtistTopTracks(artists[i].id, 'GB')
             .then(function (response) {
-              setTrackData(prevState => [...prevState, ...response.body.tracks.map(el=>el)])
-              spotifyApi.addTracksToPlaylist(playlistId, response.body.tracks.map(el => el.uri))
-                .then(function (response) {
-                  console.log("tracks added")
-                }, function (err) {
-                  console.error({ "error": err })
-                })
-
-            }, function (err) {
-              console.error({ "error": err })
+              return response.body.tracks.map(el => el.uri);
             })
+            .catch(function (err) {
+              console.error({ "error": err });
+              return []; // Return an empty array if there's an error
+            });
+  
+          promises.push(trackPromise);
         }
+  
+        // Wait for all promises to resolve
+        return Promise.all(promises);
       })
-  }
+      .then(function (allTopTracks) {
+        // Flatten the array of track URIs
+        const trackData = allTopTracks.flat();
+  
+        return spotifyApi.addTracksToPlaylist(playlistId, trackData);
+      })
+      .then(function (response) {
+        console.log("tracks added");
+      })
+      .catch(function (err) {
+        console.error({ "error": err });
+      });
+  };
+  
 
   return (
     <div>
