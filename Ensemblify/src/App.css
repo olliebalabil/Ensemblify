@@ -1,19 +1,57 @@
+:root{
+  text-align: center;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  background-color: rgb(37, 37, 37);
+  color: aliceblue;
+}
+.mashify-title{
+  font-size: 8vh;
+}
+.login-link{
+  font-size: 3vh;
+  transition: 250ms;
+}
+.login-link:hover{
+  transform: scale(1.05);
+}
+
 .top-artists {
   display: flex;
   flex-wrap: wrap;
 
 }
 .artist-button > img {
-  border-radius: 50%;
+  display:block;
   transition: 250ms;
-  width: 250px;
-  height: 250px
+
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  
 }
 .artist-button > img:hover {
   transform: scale(1.05);
 }
 .artist-button {
-  text-align: center;
+  width: 250px;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%; /* This creates the circular shape */
+  overflow: hidden;
 }
+.artist-button.active{
+  width: 260px;
+  height: 260px;
+  box-shadow: 10px 5px 5px rgba(0, 0, 255, .2);}
 
+.action-btn{
+  border-radius: 50%;
+  width: 250px;
+  height:250px;
+  transition: 250ms;
+}
+.action-btn:hover {
+  transform: scale(1.05);
+}
 

@@ -92,17 +92,14 @@ export default function TopArtistsDisplay({ spotifyApi }) {
 
 
   return (
-    <div>
-      <div>
-        {showCreateButton ? <button onClick={handleCreate}>Create</button>
-          : <button onClick={handleMix}>Mix</button>
+    
+        <div className='top-artists'>
+        {showCreateButton ? <button onClick={handleCreate} className='action-btn'>Create</button>
+          : <button className='action-btn' onClick={handleMix}>Mix</button>
 
         }
-        <div className='top-artists'>
           {artists.map((el, i) => <ArtistButton key={i} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
         </div>
-      </div>
-
-    </div>
+      
   )
 }

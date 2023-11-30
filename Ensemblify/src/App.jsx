@@ -7,6 +7,9 @@ import './App.css'
 
 
 function App() {
+  //for deployed site
+  // const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
+  // const REDIRECT_URI = 'https://mashify.onrender.com/'
   const CLIENT_ID = '7853a85331ec49398963a63212cdfe93'
   const REDIRECT_URI = 'http://localhost:5173'
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
@@ -58,13 +61,13 @@ function App() {
 
   return (
     <>
-      <h1>Mashify</h1>
-      {!token ? <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>Login to Spotify</a>
-        : <button onClick={handleLogout}>Logout</button>}
+      <h1 className='mashify-title'>Mashify</h1>
+      {!token ? <a className="login-link" href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>Login to Spotify</a>
+        : <a className="login-link" onClick={handleLogout}>Logout</a>}
 
       {token ?
         <TopArtistsDisplay spotifyApi={spotifyApi}/>
-        : <h2>Please Login</h2>
+        : <h2>Login to get started</h2>
       }
 
 
