@@ -11,7 +11,7 @@ function App() {
   const REDIRECT_URI = 'http://localhost:5173'
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
   const RESPONSE_TYPE = 'token'
-  const SCOPE = 'user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email'
+  const SCOPE = 'user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email' //remove unnecessary scopes
   const [token, setToken] = useState('')
 
   const spotifyApi = new SpotifyWebApi({
@@ -58,7 +58,7 @@ function App() {
 
   return (
     <>
-      <h1>Ensemblify</h1>
+      <h1>Mashify</h1>
       {!token ? <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>Login to Spotify</a>
         : <button onClick={handleLogout}>Logout</button>}
 

@@ -3,32 +3,12 @@ import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
 
 export default function TopArtistsDisplay({ spotifyApi }) {
-  const [topArtists, setTopArtists] = useState([])
   const [selectedArtists, setSelectedArtists] = useState([])
-  const [recommendedTracks, setRecommendedTracks] = useState([])
-  const [showPlaylist, setShowPlaylist] = useState(false)
-  const [artists,setArtists] = useState([]) //this changes from top artists to similar artists
+  const [trackData, setTrackData] = useState([])
+  const [artists, setArtists] = useState([])
+  const [showCreateButton, setShowCreateButton] = useState(false)
 
 
-  const mockTrackData = [
-    "spotify:track:52Bg6oaos7twR7IUtEpqcE",
-    "spotify:track:15Iczlf2Xl2s4EiLFrkYeg",
-    "spotify:track:0Ziohm1Ku8E2yUDYoclfhO",
-    "spotify:track:5AMrnF761nziCWUfjBgRUI",
-    "spotify:track:1bFPKxP56XWDXJOwo3Kvfp",
-    "spotify:track:4HqRhdpxH9zFUkf1kzbr3H",
-    "spotify:track:4xfAVJL8R7mVYbDk8a9xOY",
-    "spotify:track:0AYECTSiSlE8sQtGKypxx2",
-    "spotify:track:4gRySBzWoWD2JqEFZnfPuX",
-    "spotify:track:6tPiCU4LFsXUQPRIykOAnl",
-    "spotify:track:4kbMNRyFzBoqPxLxX1Q2Jq",
-    "spotify:track:5ckwOX7SVzt9OISbGkD299",
-    "spotify:track:6iI6NXjtI3IkjK2k1juqaX",
-    "spotify:track:1EfWxxlaLLiwnLS3ABr8vu",
-    "spotify:track:3Xy16SYnhBiSBL5yUXaHG1",
-    "spotify:track:0tvepqOHxqKt2PYRcLTHRR",
-    "spotify:track:1L8n3DR0g5w36X51i2k8A4"
-  ]
 
   useEffect(() => {
     console.log(selectedArtists)
@@ -45,7 +25,7 @@ export default function TopArtistsDisplay({ spotifyApi }) {
           setArtists(response.data.items)
         })
         .catch((err) => {
-          console.error(err.response.status)
+          console.error(err)
           if (err.response.status == 401) {
             localStorage.removeItem("token")
           }
@@ -58,74 +38,71 @@ export default function TopArtistsDisplay({ spotifyApi }) {
   }, [localStorage.getItem("token")])
 
   const handleMix = () => {
-    //get related artists for each selected artist
-    let tracks = []
-    const getTopTracks = async (id) => {
-      axios.get(`https://api.spotify.com/v1/artists/${id}/related-artists`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      })
-        .then((response) => {
-          
-          for (let j = 0; j < response.data.artists.length; j++) {
-            if (j < 5) { //returns 5 related artists
-              getTracks(response.data.artists[j].id)
-            }
-          }
-        })
-
-        .catch((err) => {
-          console.error("error", err.message)
-        })
-    }
-
-    //get top tracks for each related artist
-    const getTracks = async (id) => {
-      const { data } = await axios.get(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=GB`, { //change market
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      })
-      for (let j = 0; j < data.tracks.length; j++) {
-        tracks.push(data.tracks[j].uri)
-      }
-    }
-
-    const addToRelatedArtists = () => {
-      for (let i = 0; i < selectedArtists.length; i++) {
-        getTopTracks(selectedArtists[i])
-      }
-    }
-
-    const addPlaylist = async () => {
-      await addToRelatedArtists()
-      setRecommendedTracks(tracks)
-      spotifyApi.createPlaylist("Ensemblify Playlist", { 'description': 'Featuring recommendations based on your favourite artists', 'public': false })
+    setArtists([]) // add selected artist back
+    for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
+      spotifyApi.getArtistRelatedArtists(selectedArtists[i])
         .then(function (data) {
-          spotifyApi.addTracksToPlaylist(data.body.id, tracks)
-            .then(function (data) {
-              console.log("Tracks added", data)
-            }, function (err) {
-              console.log("error", err)
-            })
+          for (let j = 0; j < data.body.artists.length && j < 4; j++) { //add a limit on artists recommended
+            setArtists(prevState => [...prevState, { id: data.body.artists[j].id, name: data.body.artists[j].name, images: [{ url: data.body.artists[j].images[0].url }] }])
+          }
         }, function (err) {
-          console.log('Error', err)
-
+          console.error({ "Error": err.message })
         })
     }
-    addPlaylist()
+    setShowCreateButton(!showCreateButton)
   }
+
+  const handleCreate = () => {
+    let playlistId = '';
+    spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
+      .then(function (response) {
+        console.log("created playlist")
+        playlistId = response.body.id;
+        const promises = [];
+
+        for (let i = 0; i < artists.length; i++) {
+          const trackPromise = spotifyApi.getArtistTopTracks(artists[i].id, 'GB')
+            .then(function (response) {
+              return response.body.tracks.map(el => el.uri);
+            })
+            .catch(function (err) {
+              console.error({ "error": err });
+              return []; // Return an empty array if there's an error
+            });
+
+          promises.push(trackPromise);
+        }
+
+        // Wait for all promises to resolve
+        return Promise.all(promises);
+      })
+      .then(function (allTopTracks) {
+        // Flatten the array of track URIs
+        const trackData = allTopTracks.flat();
+
+        return spotifyApi.addTracksToPlaylist(playlistId, trackData);
+      })
+      .then(function (response) {
+        console.log("tracks added");
+      })
+      .catch(function (err) {
+        console.error({ "error": err });
+      });
+  };
+
 
   return (
     <div>
-        <div>
-          <button onClick={handleMix}>Mix</button>
-          <div className='top-artists'>
-            {artists.map(el => <ArtistButton key={el.id} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
-          </div>
+      <div>
+        {showCreateButton ? <button onClick={handleCreate}>Create</button>
+          : <button onClick={handleMix}>Mix</button>
+
+        }
+        <div className='top-artists'>
+          {artists.map((el, i) => <ArtistButton key={i} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
         </div>
-      
+      </div>
+
     </div>
   )
 }
