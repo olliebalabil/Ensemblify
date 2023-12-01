@@ -146,6 +146,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   return (
 
     <div className='top-artists'>
+      <div className="actions">
       {showCreateButton && <button onClick={handleCreate} className='action-btn'>{message}</button>}
       {!showCreateButton && <button className='action-btn' onClick={handleMix}>Mix</button>}
       {!showCreateButton &&
@@ -156,7 +157,11 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
           </form>
           : <p>Search</p>}
         </button>}
+      </div>
+      <div className="artists">
+
       {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
+      </div>
     </div>
 
   )

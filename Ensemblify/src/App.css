@@ -20,8 +20,8 @@
 
 .top-artists {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .artist-button>img {
@@ -36,6 +36,9 @@
 
 
 .artist-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: auto;
   max-width: 23vh;
   aspect-ratio: 1/1;
@@ -117,11 +120,7 @@
   }
 }
 
-.action-btn.search{
-}
-.search-form{
 
-}
 .search-form > input[type="text"]{
   width:90%;
   border: 0px;
@@ -134,3 +133,12 @@
   width:fit-content;
   font-size: 2vh;
 }
+
+.artists{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Adjust as needed */
+}
+
+/
