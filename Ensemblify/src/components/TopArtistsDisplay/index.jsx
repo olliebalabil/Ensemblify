@@ -146,23 +146,24 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   return (
 
     <div className='top-artists'>
-      <div className="actions">
-      {showCreateButton && <button onClick={handleCreate} className='action-btn'>{message}</button>}
-      {!showCreateButton && <button className='action-btn' onClick={handleMix}>Mix</button>}
-      {!showCreateButton &&
-        <button className='action-btn search' onClick={handleSearch}>{showForm ?
-          <form className="search-form" onSubmit={handleSubmit}>
-            <input type="text" value={newArtist} onChange={handleTextInput} placeholder='Add an Artist' />
-            <input type="submit" value="Add" />
-          </form>
-          : <p>Search</p>}
-        </button>}
-      </div>
-      <div className="artists">
+      <div className="buttons">
+    {showCreateButton && <button onClick={handleCreate} className='action-btn'>{message}</button>}
+    {!showCreateButton && <button className='action-btn' onClick={handleMix}>Mix</button>}
+    {!showCreateButton &&
+      <button className='action-btn search' onClick={handleSearch}>{showForm ?
+        <form className="search-form" onSubmit={handleSubmit}>
+          <input type="text" value={newArtist} onChange={handleTextInput} placeholder='Add an Artist' />
+          <input type="submit" value="Add" />
+        </form>
+        : <p>Search</p>}
+      </button>}
 
-      {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
       </div>
-    </div>
+      <div className='artists'>
+
+    {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
+      </div>
+  </div>
 
   )
 }

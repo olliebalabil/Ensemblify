@@ -88,9 +88,9 @@ function App() {
           </div>}
 
       </div>
-      {token ?
+      {token &&
         <TopArtistsDisplay spotifyApi={spotifyApi} reset={reset} setReset={setReset} />
-        : <h2>Login to get started</h2>
+        
       }
 
 
