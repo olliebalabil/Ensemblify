@@ -110,7 +110,8 @@
 
 }
 .mashify-title{
-  margin: 0px
+  margin: 0px;
+  cursor: pointer;
 }
 .fancy {
   @supports (background-clip: text) or (-webkit-background-clip: text) {
