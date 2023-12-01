@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
 
-export default function TopArtistsDisplay({ spotifyApi, reset , setReset}) {
+export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   const [selectedArtists, setSelectedArtists] = useState([])
   const [artists, setArtists] = useState([])
   const [showCreateButton, setShowCreateButton] = useState(false)
-  const [showForm,setShowForm] = useState(false)
+  const [showForm, setShowForm] = useState(false)
   const [newArtist, setNewArtist] = useState('')
-  const [message,setMessage] = useState('Create')
+  const [message, setMessage] = useState('Create')
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(reset)
     setSelectedArtists([])
     setShowCreateButton(false)
@@ -18,7 +18,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset , setReset}) {
     setNewArtist('')
 
 
-  },[reset])
+  }, [reset])
 
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset , setReset}) {
         }
       })
         .then((response) => {
-          setArtists(response.data.items)
+          setArtists(response.data.items.splice(0, 5))
         })
         .catch((err) => {
           console.error(err)
@@ -46,40 +46,42 @@ export default function TopArtistsDisplay({ spotifyApi, reset , setReset}) {
       getData()
       spotifyApi.setAccessToken(localStorage.getItem("token"))
     }
-  }, [localStorage.getItem("token"),reset])
+  }, [localStorage.getItem("token"), reset])
 
   const handleMix = () => {
-    setArtists([]) // add selected artist back
-    for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
-      spotifyApi.getArtistRelatedArtists(selectedArtists[i])
-        .then(function (data) {
-          for (let j = 0; j < data.body.artists.length && j < 4; j++) { //add a limit on artists recommended
-            setArtists(prevState => [...prevState, { id: data.body.artists[j].id, name: data.body.artists[j].name, images: [{ url: data.body.artists[j].images[0].url }] }])
-          }
-        }, function (err) {
-          console.error({ "Error": err.message })
-        })
+    if ([...selectedArtists].length) {
+      setArtists([]) // add selected artist back
+      for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
+        spotifyApi.getArtistRelatedArtists(selectedArtists[i])
+          .then(function (data) {
+            for (let j = 0; j < data.body.artists.length && j < 4; j++) { //add a limit on artists recommended
+              setArtists(prevState => [...prevState, { id: data.body.artists[j].id, name: data.body.artists[j].name, images: [{ url: data.body.artists[j].images[0].url }] }])
+            }
+          }, function (err) {
+            console.error({ "Error": err.message })
+          })
+      }
+      setShowCreateButton(!showCreateButton)
     }
-    setShowCreateButton(!showCreateButton)
   }
 
   const handleCreate = () => {
     let playlistId = '';
     function shuffle(array) {
-      let currentIndex = array.length,  randomIndex;
-    
+      let currentIndex = array.length, randomIndex;
+
       // While there remain elements to shuffle.
       while (currentIndex > 0) {
-    
+
         // Pick a remaining element.
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-    
+
         // And swap it with the current element.
         [array[currentIndex], array[randomIndex]] = [
           array[randomIndex], array[currentIndex]];
       }
-    
+
       return array;
     }
     spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
@@ -107,16 +109,16 @@ export default function TopArtistsDisplay({ spotifyApi, reset , setReset}) {
       .then(function (allTopTracks) {
         // Flatten the array of track URIs
         const trackData = allTopTracks.flat();
-       
+
         return spotifyApi.addTracksToPlaylist(playlistId, trackData);
       })
       .then(function (response) {
         console.log("tracks added");
         setMessage("Playlist created!")
-        setTimeout(()=>{
-          setReset(prevState=>prevState+1)
+        setTimeout(() => {
+          setReset(prevState => prevState + 1)
           setMessage("Create")
-        },5000)
+        }, 5000)
       })
       .catch(function (err) {
         console.error({ "error": err });
@@ -134,33 +136,34 @@ export default function TopArtistsDisplay({ spotifyApi, reset , setReset}) {
   const handleSubmit = (e) => {
     e.preventDefault()
     spotifyApi.searchArtists(newArtist)
-      .then(function(data){
+      .then(function (data) {
         setArtists(prevState => [...prevState, data.body.artists.items[0]])
       })
-      setNewArtist('')
-      setShowForm(false)
+    setNewArtist('')
+    setShowForm(false)
   }
 
   return (
-    
-        <div className='top-artists'>
-        {showCreateButton ? <button onClick={handleCreate} className='action-btn'>{message}</button>
-          : <div>
-            <button className='action-btn' onClick={handleMix}>Mix</button>
-            <button className='action-btn' onClick={handleSearch}>{
-              showForm ? 
-              <form onSubmit={handleSubmit}>
-                <input type="text" value={newArtist} onChange={handleTextInput} placeholder='Add an Artist'/>
-                <input type="submit" />
-              </form>
-              : <p>Search</p>
-            
-            }</button>
-          </div>
 
-        }
-          {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
-        </div>
-      
+    <div className='top-artists'>
+      <div className="buttons">
+    {showCreateButton && <button onClick={handleCreate} className='action-btn'>{message}</button>}
+    {!showCreateButton && <button className='action-btn' onClick={handleMix}>Mix</button>}
+    {!showCreateButton &&
+      <button className='action-btn search' onClick={handleSearch}>{showForm ?
+        <form className="search-form" onSubmit={handleSubmit}>
+          <input type="text" value={newArtist} onChange={handleTextInput} placeholder='Add an Artist' />
+          <input type="submit" value="Add" />
+        </form>
+        : <p>Search</p>}
+      </button>}
+
+      </div>
+      <div className='artists'>
+
+    {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
+      </div>
+  </div>
+
   )
 }

@@ -52,6 +52,7 @@ function App() {
         })
         .catch((err) => {
           console.error(err.message)
+          localStorage.removeItem("token")
         })
     }
   }, [token])
@@ -87,9 +88,9 @@ function App() {
           </div>}
 
       </div>
-      {token ?
+      {token &&
         <TopArtistsDisplay spotifyApi={spotifyApi} reset={reset} setReset={setReset} />
-        : <h2>Login to get started</h2>
+        
       }
 
 
