@@ -2,14 +2,23 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
 
-export default function TopArtistsDisplay({ spotifyApi }) {
+export default function TopArtistsDisplay({ spotifyApi, reset , setReset}) {
   const [selectedArtists, setSelectedArtists] = useState([])
-  const [trackData, setTrackData] = useState([])
   const [artists, setArtists] = useState([])
   const [showCreateButton, setShowCreateButton] = useState(false)
   const [showForm,setShowForm] = useState(false)
   const [newArtist, setNewArtist] = useState('')
+  const [message,setMessage] = useState('Create')
 
+  useEffect(()=>{
+    console.log(reset)
+    setSelectedArtists([])
+    setShowCreateButton(false)
+    setShowForm(false)
+    setNewArtist('')
+
+
+  },[reset])
 
 
   useEffect(() => {
@@ -37,7 +46,7 @@ export default function TopArtistsDisplay({ spotifyApi }) {
       getData()
       spotifyApi.setAccessToken(localStorage.getItem("token"))
     }
-  }, [localStorage.getItem("token")])
+  }, [localStorage.getItem("token"),reset])
 
   const handleMix = () => {
     setArtists([]) // add selected artist back
@@ -56,6 +65,23 @@ export default function TopArtistsDisplay({ spotifyApi }) {
 
   const handleCreate = () => {
     let playlistId = '';
+    function shuffle(array) {
+      let currentIndex = array.length,  randomIndex;
+    
+      // While there remain elements to shuffle.
+      while (currentIndex > 0) {
+    
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+    
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
+      }
+    
+      return array;
+    }
     spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
       .then(function (response) {
         console.log("created playlist")
@@ -81,11 +107,16 @@ export default function TopArtistsDisplay({ spotifyApi }) {
       .then(function (allTopTracks) {
         // Flatten the array of track URIs
         const trackData = allTopTracks.flat();
-
+       
         return spotifyApi.addTracksToPlaylist(playlistId, trackData);
       })
       .then(function (response) {
         console.log("tracks added");
+        setMessage("Playlist created!")
+        setTimeout(()=>{
+          setReset(prevState=>prevState+1)
+          setMessage("Create")
+        },5000)
       })
       .catch(function (err) {
         console.error({ "error": err });
@@ -95,21 +126,31 @@ export default function TopArtistsDisplay({ spotifyApi }) {
   const handleSearch = () => {
     if (!showForm) {
       setShowForm(true)
-    } else {
-      setShowForm(false)
     }
+  }
+  const handleTextInput = (e) => {
+    setNewArtist(e.target.value)
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    spotifyApi.searchArtists(newArtist)
+      .then(function(data){
+        setArtists(prevState => [...prevState, data.body.artists.items[0]])
+      })
+      setNewArtist('')
+      setShowForm(false)
   }
 
   return (
     
         <div className='top-artists'>
-        {showCreateButton ? <button onClick={handleCreate} className='action-btn'>Create</button>
+        {showCreateButton ? <button onClick={handleCreate} className='action-btn'>{message}</button>
           : <div>
             <button className='action-btn' onClick={handleMix}>Mix</button>
             <button className='action-btn' onClick={handleSearch}>{
               showForm ? 
-              <form>
-                <input type="text" />
+              <form onSubmit={handleSubmit}>
+                <input type="text" value={newArtist} onChange={handleTextInput} placeholder='Add an Artist'/>
                 <input type="submit" />
               </form>
               : <p>Search</p>
