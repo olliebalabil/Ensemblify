@@ -7,6 +7,8 @@ export default function TopArtistsDisplay({ spotifyApi }) {
   const [trackData, setTrackData] = useState([])
   const [artists, setArtists] = useState([])
   const [showCreateButton, setShowCreateButton] = useState(false)
+  const [showForm,setShowForm] = useState(false)
+  const [newArtist, setNewArtist] = useState('')
 
 
 
@@ -90,6 +92,13 @@ export default function TopArtistsDisplay({ spotifyApi }) {
       });
   };
 
+  const handleSearch = () => {
+    if (!showForm) {
+      setShowForm(true)
+    } else {
+      setShowForm(false)
+    }
+  }
 
   return (
     
@@ -97,11 +106,19 @@ export default function TopArtistsDisplay({ spotifyApi }) {
         {showCreateButton ? <button onClick={handleCreate} className='action-btn'>Create</button>
           : <div>
             <button className='action-btn' onClick={handleMix}>Mix</button>
-            <button className='action-btn'>Search</button>
+            <button className='action-btn' onClick={handleSearch}>{
+              showForm ? 
+              <form>
+                <input type="text" />
+                <input type="submit" />
+              </form>
+              : <p>Search</p>
+            
+            }</button>
           </div>
 
         }
-          {artists.map((el, i) => <ArtistButton key={i} data={el} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
+          {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
         </div>
       
   )
