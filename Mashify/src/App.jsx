@@ -11,6 +11,7 @@ function App() {
   // const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
   // const REDIRECT_URI = 'https://mashify.onrender.com/'
   //for development
+
   // const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
   // const REDIRECT_URI = 'https://mashify.onrender.com/'
 
@@ -53,6 +54,8 @@ function App() {
         .catch((err) => {
           console.error(err.message)
           localStorage.removeItem("token")
+          window.location.reload()
+
         })
     }
   }, [token])
