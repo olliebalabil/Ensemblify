@@ -53,6 +53,7 @@ function App() {
         .catch((err) => {
           console.error(err.message)
           localStorage.removeItem("token")
+          window.location.reload()
         })
     }
   }, [token])
