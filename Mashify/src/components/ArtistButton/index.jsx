@@ -17,6 +17,6 @@ export default function ArtistButton({data, selectedArtists, setSelectedArtists,
   }
 
   return (
-    <div className={`artist-button ${isActive && !showCreateButton ? 'active' :''}`} key={data.id} onClick={handleClick} data-active={false}><img src={data.images[0].url}></img></div>
+    <div className={`artist-button ${isActive && !showCreateButton ? 'active' :''} ${selectedArtists.length == 2 && !isActive ? 'in-active' : ''} ${showCreateButton ? 'in-active rec-artist': ''}`} key={data.id} onClick={handleClick} data-active={false}><img src={data.images[0].url}></img></div>
   )
 }
