@@ -15,3 +15,4 @@ This site allows users to create Spotify playlists featuring artists similar to 
 - Once two artists have been selected, click `Mix` to view the artists that will feature in your playlist.
 - To add the playlist to your Spotify, click `Create`.
 - You can then click the `Mashify` title to navigate back to the main page, or you can logout.
+
