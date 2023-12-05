@@ -7,16 +7,24 @@ import './App.css'
 
 
 function App() {
-  const CLIENT_ID = '7853a85331ec49398963a63212cdfe93'
-  const REDIRECT_URI = 'http://localhost:5173'
+  //for deployed site
+  // const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
+  // const REDIRECT_URI = 'https://mashify.onrender.com/'
+  //for development
+  // const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
+  // const REDIRECT_URI = 'https://mashify.onrender.com/'
+
+  const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
+  const REDIRECT_URI = 'https://mashify.onrender.com/'
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
   const RESPONSE_TYPE = 'token'
   const SCOPE = 'user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email' //remove unnecessary scopes
   const [token, setToken] = useState('')
+  const [reset,setReset] = useState(0)
 
   const spotifyApi = new SpotifyWebApi({
-    clientId: '7853a85331ec49398963a63212cdfe93',
-    redirectUri: 'http://localhost:5173'
+    clientId: CLIENT_ID,
+    redirectUri: REDIRECT_URI
   })
 
   useEffect(() => {
@@ -32,40 +40,59 @@ function App() {
 
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     if (token) {
-      axios.get("https://api.spotify.com/v1/me",{
-        headers:{
+      axios.get("https://api.spotify.com/v1/me", {
+        headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       })
-      .then((response)=>{
-        window.localStorage.setItem("user_id",response.data.id)
-      })
-      .catch((err)=>{
-        console.error(err.message)
-      })
+        .then((response) => {
+          window.localStorage.setItem("user_id", response.data.id)
+        })
+        .catch((err) => {
+          console.error(err.message)
+          localStorage.removeItem("token")
+        })
     }
-  },[token])
+  }, [token])
 
   const handleLogout = () => {
     window.localStorage.removeItem('token')
     window.localStorage.removeItem('user_id')
     setToken('')
   }
-
+  const handleReset = () => {
+    setReset(prevState => prevState + 1)
+    console.log("clicked")
+  }
 
 
   return (
     <>
-      <h1>Ensemblify</h1>
-      {!token ? <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>Login to Spotify</a>
-        : <button onClick={handleLogout}>Logout</button>}
+      <div >
 
-      {token ?
-        <TopArtistsDisplay spotifyApi={spotifyApi}/>
-        : <h2>Please Login</h2>
+        {!token ? <div className='header fancy'>
+          <div className='title'>
+            <h1 className='mashify-title' >Mashify</h1>
+            <h2>Select Two Artists to Mix</h2>
+          </div>
+          <a className="login-link" href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>Login to Spotify</a>
+        </div>
+          : <div className='header fancy'>
+            <a className="logout-link" onClick={handleLogout}>Logout</a>
+            <div className='title'>
+              <h1 className='mashify-title' onClick={handleReset}>Mashify</h1>
+              <h2>Select Two Artists to Mix</h2>
+            </div>
+          </div>}
+
+      </div>
+      {token &&
+        <TopArtistsDisplay spotifyApi={spotifyApi} reset={reset} setReset={setReset} />
+        
       }
+
 
 
     </>
