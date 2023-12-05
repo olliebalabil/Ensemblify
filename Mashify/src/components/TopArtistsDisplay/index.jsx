@@ -11,19 +11,11 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   const [message, setMessage] = useState('Create')
 
   useEffect(() => {
-    console.log(reset)
     setSelectedArtists([])
     setShowCreateButton(false)
     setShowForm(false)
     setNewArtist('')
-
-
   }, [reset])
-
-
-  useEffect(() => {
-    console.log(selectedArtists)
-  }, [selectedArtists])
 
   useEffect(() => {
     const getData = async () => {
@@ -49,7 +41,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   }, [localStorage.getItem("token"), reset])
 
   const handleMix = () => {
-    if ([...selectedArtists].length) {
+    if ([...selectedArtists].length==2) {
       setArtists([]) // add selected artist back
       for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
         spotifyApi.getArtistRelatedArtists(selectedArtists[i])
@@ -86,7 +78,6 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
     }
     spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
       .then(function (response) {
-        console.log("created playlist")
         playlistId = response.body.id;
         const promises = [];
 
@@ -113,7 +104,6 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
         return spotifyApi.addTracksToPlaylist(playlistId, trackData);
       })
       .then(function (response) {
-        console.log("tracks added");
         setMessage("Playlist created!")
         setTimeout(() => {
           setReset(prevState => prevState + 1)
@@ -148,7 +138,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
     <div className='top-artists'>
       <div className="buttons">
     {showCreateButton && <button onClick={handleCreate} className='action-btn'>{message}</button>}
-    {!showCreateButton && <button className='action-btn' onClick={handleMix}>Mix</button>}
+    {!showCreateButton && <button className={[...selectedArtists].length == 2 ? 'action-btn' : 'action-btn non-clickable'} onClick={handleMix}>Mix</button>}
     {!showCreateButton &&
       <button className='action-btn search' onClick={handleSearch}>{showForm ?
         <form className="search-form" onSubmit={handleSubmit}>
@@ -159,7 +149,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
       </button>}
 
       </div>
-      <div className='artists'>
+      <div className={`artists ${showCreateButton ? 'rec-grid':'mix-grid'} `}>
 
     {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
       </div>
