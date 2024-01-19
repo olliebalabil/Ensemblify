@@ -12,8 +12,8 @@ function App() {
   // const REDIRECT_URI = 'https://mashify.onrender.com/'
   //for development
 
-  // const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
-  // const REDIRECT_URI = 'https://mashify.onrender.com/'
+  // const CLIENT_ID = '7853a85331ec49398963a63212cdfe93'
+  // const REDIRECT_URI = 'http://localhost:5173'
 
   const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
   const REDIRECT_URI = 'https://mashify.onrender.com/'

@@ -9,6 +9,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   const [showForm, setShowForm] = useState(false)
   const [newArtist, setNewArtist] = useState('')
   const [message, setMessage] = useState('Create')
+  const [mixMessage, setMixMessage] = useState('Mix')
 
   useEffect(() => {
     setSelectedArtists([])
@@ -54,6 +55,11 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
           })
       }
       setShowCreateButton(!showCreateButton)
+    } else {
+      setMixMessage("Select Two Artists First")
+      setTimeout(()=>{
+        setMixMessage("Mix")
+      },1800)
     }
   }
 
@@ -127,7 +133,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
     e.preventDefault()
     spotifyApi.searchArtists(newArtist)
       .then(function (data) {
-        setArtists(prevState => [...prevState, data.body.artists.items[0]])
+        setArtists(prevState => [data.body.artists.items[0], ...prevState])
       })
     setNewArtist('')
     setShowForm(false)
@@ -137,10 +143,10 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
 
     <div className='top-artists'>
       <div className="buttons">
-    {showCreateButton && <button onClick={handleCreate} className='action-btn'>{message}</button>}
-    {!showCreateButton && <button className={[...selectedArtists].length == 2 ? 'action-btn' : 'action-btn non-clickable'} onClick={handleMix}>Mix</button>}
+    {showCreateButton && <button onClick={handleCreate} className='action-btn create'>{message}</button>}
+    {!showCreateButton && <button className={[...selectedArtists].length == 2 ? 'action-btn mix' : 'action-btn mix non-clickable'} onClick={handleMix}>{mixMessage}</button>}
     {!showCreateButton &&
-      <button className='action-btn search' onClick={handleSearch}>{showForm ?
+      <button className='action-btn search ' onClick={handleSearch}>{showForm ?
         <form className="search-form" onSubmit={handleSubmit}>
           <input type="text" value={newArtist} onChange={handleTextInput} placeholder='Add an Artist' />
           <input type="submit" value="Add" />
