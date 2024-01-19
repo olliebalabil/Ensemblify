@@ -41,14 +41,17 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
     }
   }, [localStorage.getItem("token"), reset])
 
+
+
   const handleMix = () => {
     if ([...selectedArtists].length==2) {
       setArtists([]) // add selected artist back
       for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
         spotifyApi.getArtistRelatedArtists(selectedArtists[i])
           .then(function (data) {
-            for (let j = 0; j < data.body.artists.length && j < 4; j++) { //add a limit on artists recommended
-              setArtists(prevState => [...prevState, { id: data.body.artists[j].id, name: data.body.artists[j].name, images: [{ url: data.body.artists[j].images[0].url }] }])
+            let arr = data.body.artists.sort(() => Math.random() - 0.5)
+            for (let j = 0; j < arr.length && j < 4; j++) { //add a limit on artists recommended
+              setArtists(prevState => [...prevState, { id: arr[j].id, name: arr[j].name, images: [{ url: arr[j].images[0].url }] }])
             }
           }, function (err) {
             console.error({ "Error": err.message })
@@ -65,23 +68,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
 
   const handleCreate = () => {
     let playlistId = '';
-    function shuffle(array) {
-      let currentIndex = array.length, randomIndex;
 
-      // While there remain elements to shuffle.
-      while (currentIndex > 0) {
-
-        // Pick a remaining element.
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-          array[randomIndex], array[currentIndex]];
-      }
-
-      return array;
-    }
     spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
       .then(function (response) {
         playlistId = response.body.id;
@@ -133,7 +120,10 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
     e.preventDefault()
     spotifyApi.searchArtists(newArtist)
       .then(function (data) {
-        setArtists(prevState => [data.body.artists.items[0], ...prevState])
+        setArtists(prevState => [...prevState, data.body.artists.items[0]])
+        setTimeout(()=>{
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+        },200)
       })
     setNewArtist('')
     setShowForm(false)
