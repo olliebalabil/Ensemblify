@@ -6,7 +6,7 @@ import { ArtistButton, Playlist } from "../../components"
 export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   const [selectedArtists, setSelectedArtists] = useState([])
   const [artists, setArtists] = useState([])
-  const [showCreateButton, setShowCreateButton] = useState(false)
+
   const [showForm, setShowForm] = useState(false)
   const [newArtist, setNewArtist] = useState('')
   const [message, setMessage] = useState('Create')
