@@ -1,4 +1,4 @@
-:root{
+:root {
   text-align: center;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   background-color: rgb(37, 37, 37);
@@ -12,9 +12,11 @@
   margin: 6vh;
   color: #00A080;
 }
-.login-link:hover{
+
+.login-link:hover {
   color: #008060
 }
+
 .logout-link {
   font-size: 3vh;
   cursor: pointer;
@@ -22,95 +24,13 @@
   margin-right: 10px;
   color: #00A080;
 }
-.logout-link:hover{
+
+.logout-link:hover {
   color: #008060
 }
 
 
-.top-artists {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-}
 
-.artist-button>img {
-  display: block;
- 
-
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-}
-
-
-.artist-button {
-  width: auto;
-  max-width: 23vh;
-  aspect-ratio: 1/1;
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  /* This creates the circular shape */
-  overflow: hidden;
-  margin: 1vh;
-  transition: 800ms;
-  box-shadow:
-  0 0 12px 3px #fff,
-  /* inner white */
-  0 0 20px 6px #f0f,
-  /* middle magenta */
-  0 0 28px 9px #0ff;
-/* outer cyan */
-}
-
-.artist-button.active {
-  width: 23vh;
-  height: 23vh;
-  border-radius: 50%;
-  background-color: #fff;
-  box-shadow:
-    0 0 12px 3px #fff,
-    /* inner white */
-    0 0 20px 6px rgb(0, 255, 21),
-    /* middle magenta */
-    0 0 28px 9px #0ff;
-  /* outer cyan */
-}
-
-.action-btn {
-  border-radius: 50%;
-  width: 23vh;
-  height: 23vh;
-  margin: 1vh;
-  background-color: black;
-  color: #25cdae;
-  font-size: 5vh;
-  font-weight: 700;
-  transition: 800ms;
-  box-shadow:
-  0 0 12px 3px #fff,
-  /* inner white */
-  0 0 20px 6px #f0f,
-  /* middle magenta */
-  0 0 28px 9px #0ff;
-  /* outer cyan */
-}
-
-.in-active{
-  box-shadow:
-  0 0 12px 3px #bebebe,
-  /* inner white */
-  0 0 20px 6px rgb(107, 77, 107),
-  /* middle magenta */
-  0 0 28px 9px rgb(1, 127, 127);
-  /* outer cyan */
-}
-.non-clickable{ 
-  color: #008060;
-  font-size: 4vh;
-}
 
 
 .header {
@@ -119,19 +39,24 @@
   flex-direction: column;
   margin-top: 30vh
 }
+
 .header-logged-in {
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
 
+.title {
+  margin-bottom: 2vh;
+}
 
 .title>h1 {
- 
+
   font-size: 10vh;
 
 }
-.mashify-title{
+
+.mashify-title {
   margin: 0px;
   cursor: pointer;
   transition: 500ms;
@@ -139,7 +64,7 @@
 
 .fancy {
   @supports (background-clip: text) or (-webkit-background-clip: text) {
-    background-image: 
+    background-image:
       url("data:image/svg+xml,%3Csvg width='2250' height='900' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg%3E%3Cpath fill='%2300A080' d='M0 0h2255v899H0z'/%3E%3Ccircle cx='366' cy='207' r='366' fill='%2300FDCF'/%3E%3Ccircle cx='1777.5' cy='318.5' r='477.5' fill='%2300FDCF'/%3E%3Ccircle cx='1215' cy='737' r='366' fill='%23008060'/%3E%3C/g%3E%3C/svg%3E%0A");
     background-size: 100% auto;
     background-position: center;
@@ -149,58 +74,155 @@
     transition: 500ms;
   }
 }
+
 .fancy:hover {
   background-size: 150% auto
 }
 
-.action-btn.search{
+.buttons {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
 }
-.search-form{
-  height: fit-content;
+
+.create {
+  width: 100%;
+  height: 10vh;
+  margin-bottom: 4vh;
+  color: #008060;
+  font-size: 5vh;
+  font-weight: bold;
+  background-color: whitesmoke;
+  border-radius: 10vh;
 }
-.search-form > input[type="text"]{
-  width:80%;
-  border: 0px;
-  /* border-radius: 5%; */
-  padding-block:0px;
-  padding-inline: 0px;
-  color: white;
-  font-size: 3vh;
-  background-color: transparent;
-  border-bottom: 3px  solid white; 
-  outline: none; 
+.create:hover{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
- 
-.search-form > input[type="submit"]{
-  width:fit-content;
-  font-size: 3vh;
-  background-color: transparent;
-  color: white;
+.mix {
+  width: 100%;
+  height: 10vh;
+  margin-bottom: 4vh;
+  color: #008060;
+  font-size: 5vh;
+  font-weight: bold;
+  background-color: whitesmoke;
+  border-radius: 10vh;
+}
+.mix:hover{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.search {
+  width: 100%;
+  height: 10vh;
+  padding: 0px;
+  margin-bottom: 4vh;
+  color: #008060;
+  font-size: 5vh;
+  font-weight: bold;
+  border-radius: 10vh;
+  border-width: 0px;
+}
+
+.search:hover{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.search>p {
+  margin: 0px;
+}
+
+.search-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: whitesmoke;
+  border-radius: 10vh;
+}
+
+.search-form>input[type="text"] {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-left: 5%;
+  height: 85%;
+  width: 85%;
   border: none;
-  padding:10px;
-  margin-top: 30px;
-  border-radius: 50%;
+  background-color: whitesmoke;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: #008060;
+  font-size: 90%;
+
+}
+
+.search-form>input[type="submit"] {
+  height: 100%;
+  width: 15%;
+  border: none;
+  margin-right: -5px;
+  background-color: #008060;
+  color: whitesmoke;
+  font-weight: bold;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 3vw;
+  border-radius: 0px 50px 50px 0px;
+}
+.search-form>input[type="submit"]:hover{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.artist-button {
+  background-color: whitesmoke;
+  display: flex;
+  margin-bottom: 4vh;
+  margin-left: auto;
+  margin-right: auto;
+  height: 17vh;
+  width: 75%;
+  border-radius: 17vh;
+}
+.artist-button:hover{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+
+.artist-button>div>img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.artist-button.active>div {
   box-shadow:
-    0 0 6px 1.5px #fff,
-    /* inner white */
-    0 0 10px 3px #f0f,
-    /* middle magenta */
-    0 0 14px 4.5px #0ff;
-  /* outer cyan */
-}
-
-.artists {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  justify-content: space-evenly;
-
-}
-.buttons{
-  display: flex;
+    0 0 6px 3px #fff,  /* inner white */
+    0 0 10px 6px #f0f, /* middle magenta */
+    0 0 14px 9px #0ff; /* outer cyan */
 
 }
 
-.rec-grid {
-  width: 100vh
+.artist-button>div {
+  transition-duration: 1s;
+  border-radius: 50%;
+  width: auto;
+  max-width: 23vh;
+  aspect-ratio: 1/1;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  /* This creates the circular shape */
+  overflow: hidden;
+  margin: 1vh;
+
+}
+
+.artist-button>h3 {
+  color: #008060;
+  font-size: 5vh;
+}
+
+.rec-artist:hover {
+  box-shadow: none;
 }
