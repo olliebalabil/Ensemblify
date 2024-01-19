@@ -3,7 +3,7 @@ import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
 
 
-export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
+export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCreateButton,setShowCreateButton }) {
   const [selectedArtists, setSelectedArtists] = useState([])
   const [artists, setArtists] = useState([])
 
