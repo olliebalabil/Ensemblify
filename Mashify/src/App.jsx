@@ -22,6 +22,8 @@ function App() {
   const SCOPE = 'user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email' //remove unnecessary scopes
   const [token, setToken] = useState('')
   const [reset,setReset] = useState(0)
+  const [showCreateButton, setShowCreateButton] = useState(false)
+  const [subtitle,setSubtitle] = useState('Select Two Artists to Mix')
 
   const spotifyApi = new SpotifyWebApi({
     clientId: CLIENT_ID,
@@ -60,6 +62,14 @@ function App() {
     }
   }, [token])
 
+  useEffect(()=>{
+    if(showCreateButton) {
+      setSubtitle('Create the Playlist and Add to Your Spotify Account')
+    } else {
+      setSubtitle('Select Two Artists to Mix')
+    }
+  },[showCreateButton])
+
   const handleLogout = () => {
     window.localStorage.removeItem('token')
     window.localStorage.removeItem('user_id')
@@ -90,7 +100,7 @@ function App() {
 
       </div>
       {token &&
-        <TopArtistsDisplay spotifyApi={spotifyApi} reset={reset} setReset={setReset} />
+        <TopArtistsDisplay spotifyApi={spotifyApi} reset={reset} setReset={setReset} showCreateButton={showCreateButton} setShowCreateButton={setShowCreateButton} />
         
       }
 
