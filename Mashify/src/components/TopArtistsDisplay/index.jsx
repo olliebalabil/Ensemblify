@@ -9,21 +9,14 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   const [showForm, setShowForm] = useState(false)
   const [newArtist, setNewArtist] = useState('')
   const [message, setMessage] = useState('Create')
+  const [mixMessage, setMixMessage] = useState('Mix')
 
   useEffect(() => {
-    console.log(reset)
     setSelectedArtists([])
     setShowCreateButton(false)
     setShowForm(false)
     setNewArtist('')
-
-
   }, [reset])
-
-
-  useEffect(() => {
-    console.log(selectedArtists)
-  }, [selectedArtists])
 
   useEffect(() => {
     const getData = async () => {
@@ -49,7 +42,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   }, [localStorage.getItem("token"), reset])
 
   const handleMix = () => {
-    if ([...selectedArtists].length) {
+    if ([...selectedArtists].length==2) {
       setArtists([]) // add selected artist back
       for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
         spotifyApi.getArtistRelatedArtists(selectedArtists[i])
@@ -62,6 +55,11 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
           })
       }
       setShowCreateButton(!showCreateButton)
+    } else {
+      setMixMessage("Select Two Artists First")
+      setTimeout(()=>{
+        setMixMessage("Mix")
+      },1800)
     }
   }
 
@@ -86,7 +84,6 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
     }
     spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
       .then(function (response) {
-        console.log("created playlist")
         playlistId = response.body.id;
         const promises = [];
 
@@ -113,7 +110,6 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
         return spotifyApi.addTracksToPlaylist(playlistId, trackData);
       })
       .then(function (response) {
-        console.log("tracks added");
         setMessage("Playlist created!")
         setTimeout(() => {
           setReset(prevState => prevState + 1)
@@ -137,7 +133,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
     e.preventDefault()
     spotifyApi.searchArtists(newArtist)
       .then(function (data) {
-        setArtists(prevState => [...prevState, data.body.artists.items[0]])
+        setArtists(prevState => [data.body.artists.items[0], ...prevState])
       })
     setNewArtist('')
     setShowForm(false)
@@ -147,10 +143,10 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
 
     <div className='top-artists'>
       <div className="buttons">
-    {showCreateButton && <button onClick={handleCreate} className='action-btn'>{message}</button>}
-    {!showCreateButton && <button className='action-btn' onClick={handleMix}>Mix</button>}
+    {showCreateButton && <button onClick={handleCreate} className='action-btn create'>{message}</button>}
+    {!showCreateButton && <button className={[...selectedArtists].length == 2 ? 'action-btn mix' : 'action-btn mix non-clickable'} onClick={handleMix}>{mixMessage}</button>}
     {!showCreateButton &&
-      <button className='action-btn search' onClick={handleSearch}>{showForm ?
+      <button className='action-btn search ' onClick={handleSearch}>{showForm ?
         <form className="search-form" onSubmit={handleSubmit}>
           <input type="text" value={newArtist} onChange={handleTextInput} placeholder='Add an Artist' />
           <input type="submit" value="Add" />
@@ -159,7 +155,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
       </button>}
 
       </div>
-      <div className='artists'>
+      <div className={`artists ${showCreateButton ? 'rec-grid':'mix-grid'} `}>
 
     {artists.map((el, i) => <ArtistButton key={i} data={el} showCreateButton={showCreateButton} selectedArtists={selectedArtists} setSelectedArtists={setSelectedArtists} />)}
       </div>

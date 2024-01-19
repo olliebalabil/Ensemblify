@@ -12,8 +12,8 @@ function App() {
   // const REDIRECT_URI = 'https://mashify.onrender.com/'
   //for development
 
-  // const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
-  // const REDIRECT_URI = 'https://mashify.onrender.com/'
+  // const CLIENT_ID = '7853a85331ec49398963a63212cdfe93'
+  // const REDIRECT_URI = 'http://localhost:5173'
 
   const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
   const REDIRECT_URI = 'https://mashify.onrender.com/'
@@ -67,7 +67,6 @@ function App() {
   }
   const handleReset = () => {
     setReset(prevState => prevState + 1)
-    console.log("clicked")
   }
 
 
@@ -78,11 +77,10 @@ function App() {
         {!token ? <div className='header fancy'>
           <div className='title'>
             <h1 className='mashify-title' >Mashify</h1>
-            <h2>Select Two Artists to Mix</h2>
           </div>
           <a className="login-link" href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>Login to Spotify</a>
         </div>
-          : <div className='header fancy'>
+          : <div className='header-logged-in fancy'>
             <a className="logout-link" onClick={handleLogout}>Logout</a>
             <div className='title'>
               <h1 className='mashify-title' onClick={handleReset}>Mashify</h1>
