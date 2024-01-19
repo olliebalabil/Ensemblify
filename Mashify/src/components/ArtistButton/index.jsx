@@ -7,7 +7,6 @@ export default function ArtistButton({data, selectedArtists, setSelectedArtists,
     if (selectedArtists.length<2 && !selectedArtists.includes(data.id)) { //adding an artist
       setIsActive(!isActive)
       setSelectedArtists(prevState => [...prevState,data.id])
-      console.log(selectedArtists)
     } else if (selectedArtists.includes(data.id)){ //taking away artist
       setIsActive(!isActive)
       setSelectedArtists(prevState => prevState.filter(el => el!=data.id))

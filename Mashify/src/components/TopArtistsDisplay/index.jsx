@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
 
+
 export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   const [selectedArtists, setSelectedArtists] = useState([])
   const [artists, setArtists] = useState([])
@@ -92,7 +93,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
       })
       .then(function (allTopTracks) {
         // Flatten the array of track URIs
-        const trackData = allTopTracks.flat();
+        const trackData = allTopTracks.flat().sort(() => Math.random() - 0.5)
 
         return spotifyApi.addTracksToPlaylist(playlistId, trackData);
       })
