@@ -94,7 +94,7 @@ function App() {
             <a className="logout-link" onClick={handleLogout}>Logout</a>
             <div className='title'>
               <h1 className='mashify-title' onClick={handleReset}>Mashify</h1>
-              <h2>Select Two Artists to Mix</h2>
+              <h2>{subtitle}</h2>
             </div>
           </div>}
 
