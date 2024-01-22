@@ -3,10 +3,10 @@ import axios from 'axios'
 import { ArtistButton, Playlist } from "../../components"
 
 
-export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
+export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCreateButton,setShowCreateButton }) {
   const [selectedArtists, setSelectedArtists] = useState([])
   const [artists, setArtists] = useState([])
-  const [showCreateButton, setShowCreateButton] = useState(false)
+
   const [showForm, setShowForm] = useState(false)
   const [newArtist, setNewArtist] = useState('')
   const [message, setMessage] = useState('Create')
@@ -45,6 +45,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
 
 
   const handleMix = () => {
+   
     if ([...selectedArtists].length==2) {
       setArtists([]) // add selected artist back
       for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
@@ -68,6 +69,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset }) {
   }
 
   const handleCreate = () => {
+    spotifyApi.setAccessToken(localStorage.getItem("token"))
     let playlistId = '';
 
     spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
