@@ -192,25 +192,24 @@
 
 .artist-button>div>img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: inherit;
+  height: inherit;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .artist-button>div {
   transition-duration: 1s;
   border-radius: 50%;
-  width: auto;
-  height: auto;
-  max-width: 23vw;
-  aspect-ratio: 1/1;
-  background-size: cover;
+  height: 11vh;
+  width: 11vh;
+  padding-top: auto;
+  padding-bottom: auto;
+  /* background-size: cover; */
   background-position: center;
-  border-radius: 50%;
   /* This creates the circular shape */
-  overflow: hidden;
+  /* overflow: hidden; */
   margin: 1vh;
-  
 }
 .artist-button.active>div {
   box-shadow:
@@ -224,6 +223,10 @@
   font-size: 5vw;
   margin-top: auto;
   margin-bottom: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: inherit;
 }
 
 .rec-artist:hover {
