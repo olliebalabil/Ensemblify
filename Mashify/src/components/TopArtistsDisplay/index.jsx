@@ -45,6 +45,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCre
 
 
   const handleMix = () => {
+   
     if ([...selectedArtists].length==2) {
       setArtists([]) // add selected artist back
       for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
@@ -68,6 +69,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCre
   }
 
   const handleCreate = () => {
+    spotifyApi.setAccessToken(localStorage.getItem("token"))
     let playlistId = '';
 
     spotifyApi.createPlaylist("Mashify Playlist", { "description": `A playlist containing tracks from artists similar to your chosen artists`, "public": false })
