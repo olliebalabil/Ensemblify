@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { ArtistButton, Playlist } from "../../components"
+import { ArtistButton } from "../../components"
 
 
 export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCreateButton,setShowCreateButton }) {
