@@ -17,35 +17,39 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCre
     setShowCreateButton(false)
     setShowForm(false)
     setNewArtist('')
+    getData()
   }, [reset])
 
-  useEffect(() => {
-    const getData = async () => {
-      axios.get('https://api.spotify.com/v1/me/top/artists', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+  const getData = async () => {
+    axios.get('https://api.spotify.com/v1/me/top/artists', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+      .then((response) => {
+        setArtists(response.data.items.splice(0, 5))
+      })
+      .catch((err) => {
+        console.error(err)
+        if (err.response.status == 401) {
+          localStorage.removeItem("token")
         }
       })
-        .then((response) => {
-          setArtists(response.data.items.splice(0, 5))
-        })
-        .catch((err) => {
-          console.error(err)
-          if (err.response.status == 401) {
-            localStorage.removeItem("token")
-          }
-        })
-    }
+  }
+
+  useEffect(() => {
+    
     if (localStorage.getItem("token")) {
       getData()
       spotifyApi.setAccessToken(localStorage.getItem("token"))
     }
-  }, [localStorage.getItem("token"), reset])
+  }, [localStorage.getItem("token")]) //removed reset from here
 
 
-
+  
   const handleMix = () => {
-   
+    setMessage("Create")
+    spotifyApi.setAccessToken(localStorage.getItem("token"))
     if ([...selectedArtists].length==2) {
       setArtists([]) // add selected artist back
       for (let i = 0; i < selectedArtists.length; i++) { //reset selectedArtists after this?
@@ -55,10 +59,11 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCre
             for (let j = 0; j < arr.length && j < 4; j++) { //add a limit on artists recommended
               setArtists(prevState => [...prevState, { id: arr[j].id, name: arr[j].name, images: [{ url: arr[j].images[0].url }] }])
             }
+            setSelectedArtists([]);
           }, function (err) {
             console.error({ "Error": err.message })
           })
-      }
+        }
       setShowCreateButton(!showCreateButton)
     } else {
       setMixMessage("Select Two Artists First")
@@ -101,10 +106,6 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCre
       })
       .then(function (response) {
         setMessage("Playlist created!")
-        setTimeout(() => {
-          setReset(prevState => prevState + 1)
-          setMessage("Create")
-        }, 5000)
       })
       .catch(function (err) {
         console.error({ "error": err });
