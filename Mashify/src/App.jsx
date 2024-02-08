@@ -16,7 +16,7 @@ function App() {
   // const REDIRECT_URI = 'http://localhost:5173'
 
   const CLIENT_ID = '603ce4c539bb42f1ae7c35cfe17252fc'
-  const REDIRECT_URI = 'https://red-river-06c256803.4.azurestaticapps.net/'
+  const REDIRECT_URI = 'https://mashify.azurewebsites.net/'
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
   const RESPONSE_TYPE = 'token'
   const SCOPE = 'user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email' //remove unnecessary scopes
