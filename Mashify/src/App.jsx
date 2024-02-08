@@ -15,8 +15,8 @@ function App() {
   // const CLIENT_ID = '7853a85331ec49398963a63212cdfe93'
   // const REDIRECT_URI = 'http://localhost:5173'
 
-  const CLIENT_ID = '1d89b9275bfc466ea6825462930ab7a7'
-  const REDIRECT_URI = 'https://mashify.onrender.com/'
+  const CLIENT_ID = '603ce4c539bb42f1ae7c35cfe17252fc'
+  const REDIRECT_URI = 'https://red-river-06c256803.4.azurestaticapps.net/'
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
   const RESPONSE_TYPE = 'token'
   const SCOPE = 'user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email' //remove unnecessary scopes
