@@ -48,7 +48,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCre
 
   
   const handleMix = () => {
-    setMessage("Create")
+    setMessage("Add to Spotify")
     spotifyApi.setAccessToken(localStorage.getItem("token"))
     if ([...selectedArtists].length==2) {
       setArtists([]) // add selected artist back
