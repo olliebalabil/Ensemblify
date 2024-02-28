@@ -21,7 +21,7 @@ export default function TopArtistsDisplay({ spotifyApi, reset, setReset, showCre
   }, [reset])
 
   const getData = async () => {
-    axios.get('https://api.spotify.com/v1/me/top/artists', {
+    axios.get('https://api.spotify.com/v1/me/top/artists&time_range=short_term', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
